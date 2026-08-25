@@ -17,7 +17,8 @@ ROOT = Path(__file__).resolve().parent
 SOURCE = ROOT / "README.md"
 HEADING = re.compile(r"^(#{1,2})[ \t]+(.+?)[ \t]*#*[ \t]*$")
 LINK = re.compile(r"\[([^]\n]+)]\(([^\s()]+)\)")
-DOCUMENT_TEMPLATE = """<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>{title}</title><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300&display=swap" rel="stylesheet" /><link rel="stylesheet" href="{stylesheet}" /></head><body><main>{body}</main></body></html>\n"""
+STYLES = """body{background:#eee;color:#111;font-family:"IBM Plex Sans",sans-serif;font-size:1.25rem;font-weight:300;line-height:1.6}main{max-width:70ch;margin:0 auto;padding:4rem 1.5rem}main>:last-child{margin-bottom:0}h1{font-size:4rem;margin:0 0 2rem}p{margin:0 0 2rem}a,a:visited{color:#985333}@media(prefers-color-scheme:dark){body{background:#222;color:#eee}a,a:visited{color:#d1977a}}"""
+DOCUMENT_TEMPLATE = """<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>{title}</title><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300&display=swap" rel="stylesheet" /><style>{styles}</style></head><body><main>{body}</main></body></html>\n"""
 
 
 @dataclass(frozen=True)
@@ -127,10 +128,9 @@ def render_body(page: Page) -> str:
 
 
 def render_document(page: Page) -> str:
-    stylesheet = "styles.css" if page.route == "" else "../styles.css"
     return DOCUMENT_TEMPLATE.format(
         title=html.escape(page.title),
-        stylesheet=stylesheet,
+        styles=STYLES,
         body=render_body(page),
     )
 
