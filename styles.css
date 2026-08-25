@@ -1,7 +1,7 @@
 body {
     background: #eeeeee;
     color: #111111;
-    font-family: "Fira Sans", sans-serif;
+    font-family: "IBM Plex Sans", sans-serif;
     font-size: 1.25rem;
     font-weight: 300;
     line-height: 1.6;
@@ -20,7 +20,6 @@ main > :last-child {
 h1 {
     font-size: 4rem;
     margin: 0 0 2rem;
-    margin-left: -0.079em; /* Left align Fira Sans 300 when title starts with D */
 }
 
 p {
