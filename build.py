@@ -17,8 +17,44 @@ ROOT = Path(__file__).resolve().parent
 SOURCE = ROOT / "README.md"
 HEADING = re.compile(r"^(#{1,2})[ \t]+(.+?)[ \t]*#*[ \t]*$")
 LINK = re.compile(r"\[([^]\n]+)]\(([^\s()]+)\)")
-STYLES = """body{background:#eee;color:#111;font-family:"IBM Plex Sans",sans-serif;font-size:1.25rem;font-weight:300;line-height:1.6}main{max-width:70ch;margin:0 auto;padding:4rem 1.5rem}main>:last-child{margin-bottom:0}h1{font-size:4rem;margin:0 0 2rem}p{margin:0 0 2rem}a,a:visited{color:#985333}@media(prefers-color-scheme:dark){body{background:#222;color:#eee}a,a:visited{color:#d1977a}}"""
+STYLES = """body{background:#eee;color:#111;font-family:"IBM Plex Sans",sans-serif;font-size:1.25rem;font-weight:300;line-height:1.6}main{max-width:70ch;margin:0 auto;padding:4rem 1.5rem}main>:last-child{margin-bottom:0}h1{font-size:4rem;margin:0 0 2rem;transform:translateX(var(--optical-left,0))}p{margin:0 0 2rem}a,a:visited{color:#985333}@media(prefers-color-scheme:dark){body{background:#222;color:#eee}a,a:visited{color:#d1977a}}"""
 DOCUMENT_TEMPLATE = """<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>{title}</title><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300&display=swap" rel="stylesheet" /><style>{styles}</style></head><body><main>{body}</main></body></html>\n"""
+
+# IBM Plex Sans Light v23 has 1,000 design units per em. These are the left outline
+# bounds (xMin) of its capitals, in design units.
+FONT_UNITS_PER_EM = 1000
+BODY_TO_HEADING_SIZE = 1.25 / 4
+CAPITAL_LEFT_BOUNDS = {
+    "A": 27,
+    "B": 99,
+    "C": 63,
+    "D": 99,
+    "E": 99,
+    "F": 99,
+    "G": 63,
+    "H": 99,
+    "I": 63,
+    "J": 26,
+    "K": 99,
+    "L": 99,
+    "M": 99,
+    "N": 99,
+    "O": 63,
+    "P": 99,
+    "Q": 63,
+    "R": 99,
+    "S": 42,
+    "T": 20,
+    "U": 93,
+    "V": 24,
+    "W": 24,
+    "X": 26,
+    "Y": 16,
+    "Z": 37,
+}
+AVERAGE_CAPITAL_LEFT_BOUND = sum(CAPITAL_LEFT_BOUNDS.values()) / len(
+    CAPITAL_LEFT_BOUNDS
+)
 
 
 @dataclass(frozen=True)
@@ -119,12 +155,28 @@ def render_inline(text: str) -> str:
     return "".join(output)
 
 
+def heading_left_offset(title: str) -> str | None:
+    heading_bound = CAPITAL_LEFT_BOUNDS.get(title[:1])
+    if heading_bound is None:
+        return None
+
+    offset = (
+        -heading_bound + AVERAGE_CAPITAL_LEFT_BOUND * BODY_TO_HEADING_SIZE
+    ) / FONT_UNITS_PER_EM
+    value = f"{float(offset):.9f}".rstrip("0").rstrip(".")
+    return f"{value}em"
+
+
 def render_body(page: Page) -> str:
     title = html.escape(page.title)
+    optical_offset = heading_left_offset(page.title)
+    heading_style = (
+        f' style="--optical-left:{optical_offset}"' if optical_offset else ""
+    )
     content = "".join(
         f"<p>{render_inline(paragraph)}</p>" for paragraph in page.paragraphs
     )
-    return f"<h1>{title}</h1>{content}"
+    return f"<h1{heading_style}>{title}</h1>{content}"
 
 
 def render_document(page: Page) -> str:
