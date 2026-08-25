@@ -6,6 +6,7 @@
 !*.html
 !*.css
 !*.md
+!*.py
 
 # Mystery files.
 .*
