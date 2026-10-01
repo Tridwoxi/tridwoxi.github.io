@@ -1,6 +1,6 @@
 # Darryl Wang
 
-I'm a computer science student at the University of Rochester. I work on backend systems primarily in Java. Previously, I worked as a software engineering intern at [Lava](https://www.lava.so), as a software engineering intern at [AnytimeAI](https://www.anytimeai.ai), and as a research assistant at the [Jiang Lab](https://sas.rochester.edu/chm/groups/jiang/).
+I'm a computer science student at the [University of Rochester](https://www.rochester.edu). I work on backend systems primarily in Java. Previously, I worked as a software engineering intern at [Lava](https://www.lava.so), as a software engineering intern at [AnytimeAI](https://www.anytimeai.ai), and as a research assistant at the [Jiang Lab](https://sas.rochester.edu/chm/groups/jiang/).
 
 I wrote [Mayulime](https://github.com/Tridwoxi/Mayulime), the fastest multi-pair shortest path vertex interdiction solver. Currently, I'm working on [Serta](https://github.com/Tridwoxi/Serta), a 2D platformer.
 
